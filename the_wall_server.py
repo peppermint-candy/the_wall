@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, session, redirect, flash
 from flask.ext.bcrypt import Bcrypt
 from the_wall_mysqlconnection import MySQLConnector
 import re
+import time
 
 app = Flask(__name__)
 mysql = MySQLConnector(app, 'the_wall')
@@ -10,6 +11,8 @@ app.secret_key = "Secret"
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9\.\+_-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]+$')
 NAME = re.compile(r'[0,1,2,3,4,5,6,7,8,9]')
 bcrypt = Bcrypt(app)
+now = time.localtime(time.time())
+# time.strftime("%a %b %d", now)
 
 @app.route('/')
 def index():
@@ -99,7 +102,7 @@ def logintab():
 		return check(request.form)
 	else:
 		flash("try again")
-		return redirect('/test')
+		return redirect('/login')
 
 def check(data):
 	print "checking input with DB"
@@ -107,11 +110,12 @@ def check(data):
 	query_data = {'email' : data['elogin']}
 	user = mysql.query_db(user_query, query_data)
 	if bcrypt.check_password_hash(user[0]['password'], data['Lpw']):
+		session['in_user'] = user[0]['id']
 		print "user is logged in"
-		return render_template('logged_in.html')
+		return redirect('/wall')
 	else:
 		flash("Wrong password, please try again")
-		return	redirect('/test')
+		return	redirect('/login')
 
 @app.route('/login')
 def test():
