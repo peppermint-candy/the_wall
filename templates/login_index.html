@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		div {
+			height: 350px;
+			width: 460px;
+			display: inline-block;
+			vertical-align: top;
+			margin:20px 20px;
+			border: 2px solid blue;
+		}
+
+		h1 {
+			margin: 20px auto;
+			text-align: center;
+		}
+
+		h2 {
+			margin: 20px auto;
+			text-align: center;
+
+		}
+
+		p.label {
+			width: 180px;
+			height: 20px;
+			display: inline-block;
+			margin: 2px 10px;
+		}
+
+	</style>
+	<title>Log in and Registration Form</title>
+</head>
+<body>
+	<div><h1>Register Here!</h1>
+
+		<form action='/register' method='POST'>
+		<p class="label" >email:</p><input type="text" name="email"><br><br>
+		<p class="label" >First Name:</p><input type="text" name="first_name"><br><br>
+		<p class="label" >Last Name:</p><input type="text" name="last_name"><br><br>
+		<p class="label" >Password:</p><input type="password" name="pw"><br><br>
+		<p class="label" >Confirm Password:</p><input type="password" name="c_pw"><br><br>
+		<input style="margin-left: 308px;" type="submit" value="Register">
+		</form>
+		 <p>Alrady have an account, click<a href="{{ url_for('test') }}"> here to log in?</a>
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+					<p style="color: red;">{{message}}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+	</div>
+</html>

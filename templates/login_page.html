@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div>
+		<h2>Login Here!</h2>
+		<form action="/verify" method="post">
+			<p class="label">Login e-mail: </p><input type="text" name="elogin"><br><br>
+			<p class="label">Password: </p><input type="password" name="Lpw"><br><br>
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+					<p>{{message}}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+			<input style="margin-left: 325px;" type="submit" value="Login">
+		</form>
+	</div>
+</body>
+</body>
+</html>
