@@ -1,12 +1,11 @@
 from flask import Flask, render_template, request, session, redirect, flash
 # import the Connector function
 from flask.ext.bcrypt import Bcrypt
-from LnR_mysqlconnection import MySQLConnector
+from the_wall_mysqlconnection import MySQLConnector
 import re
-import md5
 
 app = Flask(__name__)
-mysql = MySQLConnector(app, 'assg_login_register')
+mysql = MySQLConnector(app, 'the_wall')
 app.secret_key = "Secret"
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9\.\+_-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z]+$')
 NAME = re.compile(r'[0,1,2,3,4,5,6,7,8,9]')
@@ -14,7 +13,7 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def index():
-	return render_template('login_index.html')
+	return render_template('register.html')
 
 @app.route('/register', methods=["POST"])
 def process():
@@ -114,14 +113,18 @@ def check(data):
 		flash("Wrong password, please try again")
 		return	redirect('/test')
 
-@app.route('/test')
+@app.route('/login')
 def test():
 	print "user entering login page"
 	return render_template('login_page.html')
 
-@app.route('/login')
+@app.route('/pass')
 def login():
 	print "user successfully registered"
-	return redirect('/test')
+	return redirect('/login')
+
+@app.route('/wall')
+def wall():
+	return render_template('logged_in.html')
 app.run(debug=True)
 

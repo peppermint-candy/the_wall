@@ -3,7 +3,7 @@
 <head>
 	<style>
 		div {
-			height: 350px;
+			min-height: 350px;
 			width: 460px;
 			display: inline-block;
 			vertical-align: top;
@@ -43,11 +43,11 @@
 		<p class="label" >Confirm Password:</p><input type="password" name="c_pw"><br><br>
 		<input style="margin-left: 308px;" type="submit" value="Register">
 		</form>
-		 <p>Alrady have an account, click<a href="{{ url_for('test') }}"> here to log in?</a>
+		 <p>Alrady have an account, click<a href="{{ url_for('login') }}"> here to log in?</a>
 			{% with messages = get_flashed_messages() %}
 				{% if messages %}
 					{% for message in messages %}
-					<p style="color: red;">{{message}}</p>
+					<p style="color: red; margin-left:10px;">{{message}}</p>
 					{% endfor %}
 				{% endif %}
 			{% endwith %}
