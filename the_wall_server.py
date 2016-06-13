@@ -130,17 +130,47 @@ def login():
 
 @app.route('/wall')
 def wall():
-	print session['id_user']
-	return render_template('logged_in.html')
 
-@app.route('/post' ,methods=['POST'])
-def post():
-	all_post = []
-	all_post.apend(request.form['msg'])
-	print all_post
+	query_msg = "SELECT * FROM messages"
+	posts = mysql.query_db(query_msg)
+
+	query_cmnt = "SELECT * FROM comments"
+	cmnts = mysql.query_db(query_cmnt)
+	return render_template('logged_in.html' ,all_posts = posts, all_cmnts = cmnts)
+
+@app.route('/msg' , methods =['POST'])
+def msg():
+	print " in message"
+	if request.form['msg'] != "":
+		insert(request.form)
+	else:
+		print "post is empty"
+
 	return redirect('/wall')
 
+def insert(data):
+	# insert_join = "SELECT * FROM messages JOIN users ON users.id = messages.users_id;"
+	insert_query = "INSERT INTO messages (message, users_id, created_at, updated_at) VALUES (:message, :users_id, NOW(), NOW())"
+	query_data = { 'message': data['msg'] , 'users_id': session['id_user'] }
+	messages = mysql.query_db(insert_query, query_data)
 
+	return redirect('/wall')
+
+@app.route('/comment', methods=['POST'])
+def comment():
+	print "in comment"
+	if request.form['comment'] != "":
+		post_comment(request.form)
+	else:
+		print "comment is empty"
+	return redirect('/wall')
+
+def post_comment(data):
+	insert_query = "INSERT INTO comments (comment, users_id, messages_id, created_at, updated_at) VALUES (:comment, :users_id, :messages_id, NOW(), NOW())"
+	query_data = { 'comment': data['comment'] , 'users_id': session['id_user'] ,'messages_id': data['comment_post']}
+	comments = mysql.query_db(insert_query, query_data)
+	return redirect('/wall')
+		
 
 
 app.run(debug=True)

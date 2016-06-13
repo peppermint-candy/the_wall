@@ -12,6 +12,7 @@
 			width: 970px;
 			height: 900px;
 			outline: 2px solid black;
+			overflow-y: auto
 		}
 		
 		div.header {
@@ -32,7 +33,7 @@
 			border-radius: 5px;
 		}
 
-		input {
+		input.msg {
 			height: 30px;
 			width: 170px;
 			font-size: 16px;
@@ -44,15 +45,47 @@
 			border: 1px solid #208a18;
 			margin-left: 640px;
 		}
-/*
-		div.post {
+
+		div.post_log {
 			height: 100px;
 			width: 700px;
 			vertical-align: top;
 			margin-left: 100px;
+			border: 2px solid black;
+			border-radius: 5px;
+		}
+
+		div.cmnt {
+			height: 80px;
+			width: 600px;
+			vertical-align: top;
+			margin-left: 150px;
 			border: 2px solid blue;
 			border-radius: 5px;
-		}*/
+		}	
+
+		p {
+			display: inline-block;
+		}
+
+		textarea.comment {
+			width: 650px;
+			height: 50px;
+			margin-left: 150px;
+		}
+
+		input.cmnt {
+			height: 30px;
+			width: 170px;
+			font-size: 16px;
+			color: white;
+			font-weight: bold;
+			text-align: center;
+			background-color: #0000cc;
+			border-radius: 5px;
+			border: 1px solid #0000cc;
+			margin-left: 640px;
+		}
 
 	</style>
 </head>
@@ -65,17 +98,39 @@
 		</div>
 		<div class="body" style="height: 700px; width:920px; text-align:left; vertical-align:top; margin: 50px auto;">
 		<h4 style="margin-left:105px;">Post a message:</h4>
-			<form action="/post" method="post">
+			<form action="/msg" method="post">
 			<div>
 				<textarea name="msg" class="msg"></textarea>
 			</div>
-
-
-				<input type="submit" name="post" value="Post a message">
+				<input class="msg" type="submit" name="post" value="Post a message">
+				<input type="hidden" name="post" value="msg">
 			</form>
-
 			<div class="post">
-				
+				{% for post in all_posts %}
+				<p style="margin-left: 100px;"><b> {{ session['name_user'] }} </b></p>
+				<p> {{ post['created_at'] }} </p>
+				<div class="post_log">
+					<p>{{ post['message'] }}</p>		
+				</div>
+				<div>
+					<p style="margin-left: 150px;">Post a comment:</p>
+					<form action="/comment" method="post">
+						<textarea name="comment" class="comment"></textarea>
+						<input type="hidden" name="comment_post" value= "{{ post['id'] }}" >
+						<input class="cmnt" type="submit" name="comment_button" value="Comment">
+					</form>	
+
+				{% for cmnt in all_cmnts  %}
+					{% if cmnt['messages_id'] == post['id'] %}
+					<p style="margin-left: 150px; color:blue;"><b> {{ session['name_user'] }} </b></p>
+					<p> {{ cmnt['created_at'] }} </p>
+					<div class="cmnt">
+						<p>{{ cmnt['comment'] }}</p>
+					</div>
+					{% endif %}
+				{% endfor %}
+				{% endfor %}
+				</div>
 			</div>
 		</div>
 	</div>
