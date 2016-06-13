@@ -120,7 +120,6 @@ def check(data):
 
 @app.route('/login')
 def test():
-	session.clear()
 	print "user entering login page"
 	return render_template('login_page.html')
 
@@ -132,10 +131,10 @@ def login():
 @app.route('/wall')
 def wall():
 
-	query_msg = "SELECT * FROM messages"
+	query_msg = "SELECT messages.id as m_id, users.first_name, messages.created_at, messages.message FROM messages JOIN users ON users.id = messages.users_id"
 	posts = mysql.query_db(query_msg)
 
-	query_cmnt = "SELECT * FROM comments"
+	query_cmnt = "SELECT messages.id as m_id, users.first_name, comments.messages_id, comments.created_at, comments.comment FROM comments JOIN users ON users.id = comments.users_id JOIN messages ON messages.id = comments.messages_id"
 	cmnts = mysql.query_db(query_cmnt)
 	return render_template('logged_in.html' ,all_posts = posts, all_cmnts = cmnts)
 
@@ -150,7 +149,7 @@ def msg():
 	return redirect('/wall')
 
 def insert(data):
-	# insert_join = "SELECT * FROM messages JOIN users ON users.id = messages.users_id;"
+
 	insert_query = "INSERT INTO messages (message, users_id, created_at, updated_at) VALUES (:message, :users_id, NOW(), NOW())"
 	query_data = { 'message': data['msg'] , 'users_id': session['id_user'] }
 	messages = mysql.query_db(insert_query, query_data)
@@ -172,7 +171,13 @@ def post_comment(data):
 	comments = mysql.query_db(insert_query, query_data)
 	return redirect('/wall')
 		
-
+# @app.route('/logoff')
+# def logof():
+# 	session.clear()
+# 	return redirect('/login')
 
 app.run(debug=True)
 
+
+#comment out 
+#SELECT messages.id as m_id, comments.comment FROM comments JOIN users ON users.id = comments.users_id JOIN messages ON messages.id = comments.messages_id
