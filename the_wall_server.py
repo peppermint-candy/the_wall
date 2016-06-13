@@ -110,7 +110,8 @@ def check(data):
 	query_data = {'email' : data['elogin']}
 	user = mysql.query_db(user_query, query_data)
 	if bcrypt.check_password_hash(user[0]['password'], data['Lpw']):
-		session['in_user'] = user[0]['id']
+		session['id_user'] = user[0]['id']
+		session['name_user'] = user[0]['first_name']
 		print "user is logged in"
 		return redirect('/wall')
 	else:
@@ -129,6 +130,18 @@ def login():
 
 @app.route('/wall')
 def wall():
+	print session['id_user']
 	return render_template('logged_in.html')
+
+@app.route('/post' ,methods=['POST'])
+def post():
+	all_post = []
+	all_post.apend(request.form['msg'])
+	print all_post
+	return redirect('/wall')
+
+
+
+
 app.run(debug=True)
 
