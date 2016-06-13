@@ -120,6 +120,7 @@ def check(data):
 
 @app.route('/login')
 def test():
+	session.clear()
 	print "user entering login page"
 	return render_template('login_page.html')
 
